@@ -16,13 +16,13 @@
 /// A sequence that presents the elements of a base sequence of elements with a
 /// separator between each of those elements.
 public struct InterspersedSequence<Base: Sequence> {
-  @usableFromInline
+  
   internal let base: Base
   
-  @usableFromInline
+  
   internal let separator: Base.Element
   
-  @inlinable
+  
   internal init(base: Base, separator: Base.Element) {
     self.base = base
     self.separator = separator
@@ -32,29 +32,29 @@ public struct InterspersedSequence<Base: Sequence> {
 extension InterspersedSequence: Sequence {
   /// The iterator for an `InterspersedSequence` sequence.
   public struct Iterator: IteratorProtocol {
-    @usableFromInline
+    
     internal enum State {
       case start
       case element(Base.Element)
       case separator
     }
     
-    @usableFromInline
+    
     internal var iterator: Base.Iterator
     
-    @usableFromInline
+    
     internal let separator: Base.Element
     
-    @usableFromInline
+    
     internal var state = State.start
     
-    @inlinable
+    
     internal init(iterator: Base.Iterator, separator: Base.Element) {
       self.iterator = iterator
       self.separator = separator
     }
 
-    @inlinable
+    
     public mutating func next() -> Base.Element? {
       // After the start, the state flips between element and separator. Before
       // returning a separator, a check is made for the next element as a
@@ -75,7 +75,7 @@ extension InterspersedSequence: Sequence {
     }
   }
 
-  @inlinable
+  
   public func makeIterator() -> InterspersedSequence<Base>.Iterator {
     Iterator(iterator: base.makeIterator(), separator: separator)
   }
@@ -84,21 +84,21 @@ extension InterspersedSequence: Sequence {
 extension InterspersedSequence: Collection where Base: Collection {
   /// A position in an `InterspersedSequence` instance.
   public struct Index: Comparable {
-    @usableFromInline
+    
     internal enum Representation: Equatable {
       case element(Base.Index)
       case separator(next: Base.Index)
     }
     
-    @usableFromInline
+    
     internal let representation: Representation
 
-    @inlinable
+    
     internal init(representation: Representation) {
       self.representation = representation
     }
 
-    @inlinable
+    
     public static func < (lhs: Index, rhs: Index) -> Bool {
       switch (lhs.representation, rhs.representation) {
       case let (.element(li), .element(ri)),
@@ -110,28 +110,28 @@ extension InterspersedSequence: Collection where Base: Collection {
       }
     }
     
-    @inlinable
+    
     internal static func element(_ index: Base.Index) -> Self {
       Self(representation: .element(index))
     }
 
-    @inlinable
+    
     internal static func separator(next: Base.Index) -> Self {
       Self(representation: .separator(next: next))
     }
   }
 
-  @inlinable
+  
   public var startIndex: Index {
     base.startIndex == base.endIndex ? endIndex : .element(base.startIndex)
   }
 
-  @inlinable
+  
   public var endIndex: Index {
     .separator(next: base.endIndex)
   }
 
-  @inlinable
+  
   public func index(after i: Index) -> Index {
     precondition(i != endIndex, "Can't advance past endIndex")
     switch i.representation {
@@ -142,7 +142,7 @@ extension InterspersedSequence: Collection where Base: Collection {
     }
   }
 
-  @inlinable
+  
   public subscript(position: Index) -> Element {
     switch position.representation {
     case .element(let index): return base[index]
@@ -150,7 +150,7 @@ extension InterspersedSequence: Collection where Base: Collection {
     }
   }
   
-  @inlinable
+  
   public func distance(from start: Index, to end: Index) -> Int {
     switch (start.representation, end.representation) {
     case let (.element(element), .separator(next: separator)):
@@ -163,14 +163,14 @@ extension InterspersedSequence: Collection where Base: Collection {
     }
   }
   
-  @inlinable
+  
   public func index(_ index: Index, offsetBy distance: Int) -> Index {
     distance >= 0
       ? offsetForward(index, by: distance)
       : offsetBackward(index, by: -distance)
   }
 
-  @inlinable
+  
   public func index(
       _ index: Index,
       offsetBy distance: Int,
@@ -187,21 +187,21 @@ extension InterspersedSequence: Collection where Base: Collection {
       }
     }
   
-  @inlinable
+  
   internal func offsetForward(_ i: Index, by distance: Int) -> Index {
     guard let index = offsetForward(i, by: distance, limitedBy: endIndex)
       else { fatalError("Index is out of bounds") }
     return index
   }
   
-  @inlinable
+  
   internal func offsetBackward(_ i: Index, by distance: Int) -> Index {
     guard let index = offsetBackward(i, by: distance, limitedBy: startIndex)
       else { fatalError("Index is out of bounds") }
     return index
   }
     
-  @inlinable
+  
   internal func offsetForward(
     _ index: Index, by distance: Int, limitedBy limit: Index
   ) -> Index? {
@@ -228,7 +228,7 @@ extension InterspersedSequence: Collection where Base: Collection {
     }
   }
   
-  @inlinable
+  
   internal func offsetBackward(
     _ index: Index, by distance: Int, limitedBy limit: Index
   ) -> Index? {
@@ -259,7 +259,7 @@ extension InterspersedSequence: Collection where Base: Collection {
 extension InterspersedSequence: BidirectionalCollection
   where Base: BidirectionalCollection
 {
-  @inlinable
+  
   public func index(before i: Index) -> Index {
     precondition(i != startIndex, "Can't move before startIndex")
     switch i.representation {
@@ -288,41 +288,41 @@ extension InterspersedSequence: LazyCollectionProtocol
 /// A sequence over the results of applying a closure to the sequence's
 /// elements, with a separator that separates each pair of adjacent transformed
 /// values.
-@usableFromInline
+
 internal struct InterspersedMapSequence<Base: Sequence, Result> {
-  @usableFromInline
+  
   internal let base: Base
   
-  @usableFromInline
+  
   internal let transform: (Base.Element) -> Result
   
-  @usableFromInline
+  
   internal let separator: (Base.Element, Base.Element) -> Result
 }
 
 extension InterspersedMapSequence: Sequence {
-  @usableFromInline
+  
   internal struct Iterator: IteratorProtocol {
-    @usableFromInline
+    
     internal enum State {
       case start
       case element(Base.Element)
       case separator(previous: Base.Element)
     }
     
-    @usableFromInline
+    
     internal var base: Base.Iterator
     
-    @usableFromInline
+    
     internal let transform: (Base.Element) -> Result
     
-    @usableFromInline
+    
     internal let separator: (Base.Element, Base.Element) -> Result
     
-    @usableFromInline
+    
     internal var state = State.start
     
-    @inlinable
+    
     internal init(
       base: Base.Iterator,
       transform: @escaping (Base.Element) -> Result,
@@ -333,7 +333,7 @@ extension InterspersedMapSequence: Sequence {
       self.separator = separator
     }
 
-    @inlinable
+    
     internal mutating func next() -> Result? {
       switch state {
       case .start:
@@ -351,7 +351,7 @@ extension InterspersedMapSequence: Sequence {
     }
   }
 
-  @inlinable
+  
   internal func makeIterator() -> Iterator {
     Iterator(
       base: base.makeIterator(),
@@ -361,33 +361,33 @@ extension InterspersedMapSequence: Sequence {
 }
 
 extension InterspersedMapSequence: Collection where Base: Collection {
-  @usableFromInline
+  
   internal struct Index: Comparable {
-    @usableFromInline
+    
     internal enum Representation {
       case element(Base.Index)
       case separator(previous: Base.Index, next: Base.Index)
     }
     
-    @usableFromInline
+    
     internal let representation: Representation
     
-    @inlinable
+    
     internal init(representation: Representation) {
       self.representation = representation
     }
     
-    @inlinable
+    
     internal static func element(_ index: Base.Index) -> Self {
       Self(representation: .element(index))
     }
 
-    @inlinable
+    
     internal static func separator(previous: Base.Index, next: Base.Index) -> Self {
       Self(representation: .separator(previous: previous, next: next))
     }
     
-    @inlinable
+    
     internal static func == (lhs: Self, rhs: Self) -> Bool {
       switch (lhs.representation, rhs.representation) {
       case let (.element(lhs), .element(rhs)),
@@ -398,7 +398,7 @@ extension InterspersedMapSequence: Collection where Base: Collection {
       }
     }
     
-    @inlinable
+    
     internal static func < (lhs: Self, rhs: Self) -> Bool {
       switch (lhs.representation, rhs.representation) {
       case let (.element(lhs), .element(rhs)),
@@ -410,17 +410,17 @@ extension InterspersedMapSequence: Collection where Base: Collection {
     }
   }
   
-  @inlinable
+  
   internal var startIndex: Index {
     base.isEmpty ? endIndex : .element(base.startIndex)
   }
   
-  @inlinable
+  
   internal var endIndex: Index {
     .separator(previous: base.endIndex, next: base.endIndex)
   }
   
-  @inlinable
+  
   internal func index(after index: Index) -> Index {
     switch index.representation {
     case .element(let index):
@@ -431,7 +431,7 @@ extension InterspersedMapSequence: Collection where Base: Collection {
     }
   }
   
-  @inlinable
+  
   internal subscript(position: Index) -> Result {
     switch position.representation {
     case .element(let index):
@@ -441,7 +441,7 @@ extension InterspersedMapSequence: Collection where Base: Collection {
     }
   }
   
-  @inlinable
+  
   internal func distance(from start: Index, to end: Index) -> Int {
     switch (start.representation, end.representation) {
     case let (.element(lhs), .element(rhs)),
@@ -454,7 +454,7 @@ extension InterspersedMapSequence: Collection where Base: Collection {
     }
   }
   
-  @inlinable
+  
   internal func index(_ index: Index, offsetBy distance: Int) -> Index {
     guard distance != 0 else { return index }
     
@@ -463,7 +463,7 @@ extension InterspersedMapSequence: Collection where Base: Collection {
       : offsetBackward(index, by: -distance)
   }
   
-  @inlinable
+  
   internal func index(
     _ index: Index,
     offsetBy distance: Int,
@@ -482,21 +482,21 @@ extension InterspersedMapSequence: Collection where Base: Collection {
     }
   }
   
-  @inlinable
+  
   internal func offsetForward(_ i: Index, by distance: Int) -> Index {
     guard let index = offsetForward(i, by: distance, limitedBy: endIndex)
     else { fatalError("Index is out of bounds") }
     return index
   }
   
-  @inlinable
+  
   internal func offsetBackward(_ i: Index, by distance: Int) -> Index {
     guard let index = offsetBackward(i, by: distance, limitedBy: startIndex)
     else { fatalError("Index is out of bounds") }
     return index
   }
   
-  @inlinable
+  
   internal func offsetForward(
     _ index: Index, by distance: Int, limitedBy limit: Index
   ) -> Index? {
@@ -529,7 +529,7 @@ extension InterspersedMapSequence: Collection where Base: Collection {
     }
   }
   
-  @inlinable
+  
   internal func offsetBackward(
     _ index: Index, by distance: Int, limitedBy limit: Index
   ) -> Index? {
@@ -564,7 +564,7 @@ extension InterspersedMapSequence: Collection where Base: Collection {
 extension InterspersedMapSequence: BidirectionalCollection
   where Base: BidirectionalCollection
 {
-  @inlinable
+  
   internal func index(before index: Index) -> Index {
     switch index.representation {
     case .element(let index):
@@ -580,7 +580,7 @@ extension InterspersedMapSequence: BidirectionalCollection
 extension InterspersedMapSequence.Index: Hashable
   where Base.Index: Hashable
 {
-  @inlinable
+  
   internal func hash(into hasher: inout Hasher) {
     switch representation {
     case .element(let base):
@@ -630,7 +630,7 @@ extension Sequence {
   /// - Returns: The interspersed sequence of elements.
   ///
   /// - Complexity: O(1)
-  @inlinable
+  
   public func interspersed(
     with separator: Element
   ) -> InterspersedSequence<Self> {
@@ -656,7 +656,7 @@ extension LazySequenceProtocol {
   ///         with: { $0 == $1 ? " == " : " != " })
   ///     print(strings.joined()) // "1 != 2 == 2"
   ///
-  @usableFromInline
+  
   internal func interspersedMap<Result>(
     _ transform: @escaping (Element) -> Result,
     with separator: @escaping (Element, Element) -> Result

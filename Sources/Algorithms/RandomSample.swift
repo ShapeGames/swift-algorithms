@@ -28,7 +28,7 @@ extension Collection {
   ///   collection's count, then this method returns the full collection.
   ///
   /// - Complexity: O(*n*), where *n* is the length of the collection.
-  @inlinable
+  
   public func randomStableSample<G: RandomNumberGenerator>(
     count k: Int, using rng: inout G
   ) -> [Element] {
@@ -67,7 +67,7 @@ extension Collection {
   ///   collection's count, then this method returns the full collection.
   ///
   /// - Complexity: O(*n*), where *n* is the length of the collection.
-  @inlinable
+  
   public func randomStableSample(count k: Int) -> [Element] {
     var g = SystemRandomNumberGenerator()
     return randomStableSample(count: k, using: &g)
@@ -82,14 +82,14 @@ extension Collection {
 // Algorithms of Time Complexity O(n(1 + log(N/n)))":
 // https://dl.acm.org/doi/pdf/10.1145/198429.198435
 
-@usableFromInline
+
 internal func nextW<G: RandomNumberGenerator>(
   k: Int, using rng: inout G
 ) -> Double {
   Double.root(.random(in: 0..<1, using: &rng), k)
 }
 
-@usableFromInline
+
 internal func nextOffset<G: RandomNumberGenerator>(
   w: Double, using rng: inout G
 ) -> Int {
@@ -110,7 +110,7 @@ extension Collection {
   /// - Complexity: O(*k*), where *k* is the number of elements to select, if
   ///   the collection conforms to `RandomAccessCollection`. Otherwise, O(*n*),
   ///   where *n* is the length of the collection.
-  @inlinable
+  
   public func randomSample<G: RandomNumberGenerator>(
     count k: Int, using rng: inout G
   ) -> [Element] {
@@ -161,7 +161,7 @@ extension Collection {
   /// - Complexity: O(*k*), where *k* is the number of elements to select, if
   ///   the collection conforms to `RandomAccessCollection`. Otherwise, O(*n*),
   ///   where *n* is the length of the collection.
-  @inlinable
+  
   public func randomSample(count k: Int) -> [Element] {
     var g = SystemRandomNumberGenerator()
     return randomSample(count: k, using: &g)
@@ -179,7 +179,7 @@ extension Sequence {
   ///   method returns the full sequence.
   ///
   /// - Complexity: O(*n*), where *n* is the length of the sequence.
-  @inlinable
+  
   public func randomSample<G: RandomNumberGenerator>(
     count k: Int, using rng: inout G
   ) -> [Element] {
@@ -229,7 +229,7 @@ extension Sequence {
   ///   method returns the full sequence.
   ///
   /// - Complexity: O(*n*), where *n* is the length of the sequence.
-  @inlinable
+  
   public func randomSample(count k: Int) -> [Element] {
     var g = SystemRandomNumberGenerator()
     return randomSample(count: k, using: &g)

@@ -27,7 +27,7 @@ extension Collection {
   ///
   /// - Complexity: O(*n*), where *n* is the length of this collection.
   ///
-  @inlinable
+  
   public func trimmingPrefix(
     while predicate: (Element) throws -> Bool
   ) rethrows -> SubSequence {
@@ -56,7 +56,7 @@ extension Collection where Self: RangeReplaceableCollection {
   ///
   /// - Complexity: O(*n*), where *n* is the length of this collection.
   ///
-  @inlinable
+  
   @_disfavoredOverload
   public mutating func trimPrefix(
     while predicate: (Element) throws -> Bool
@@ -82,7 +82,7 @@ extension Collection where Self == Self.SubSequence {
   ///
   /// - Complexity: O(*n*), where *n* is the length of this collection.
   ///
-  @inlinable
+  
   public mutating func trimPrefix(
     while predicate: (Element) throws -> Bool
   ) rethrows {
@@ -109,7 +109,7 @@ extension BidirectionalCollection {
   ///
   /// - Complexity: O(*n*), where *n* is the length of this collection.
   ///
-  @inlinable
+  
   public func trimming(
     while predicate: (Element) throws -> Bool
   ) rethrows -> SubSequence {
@@ -130,7 +130,7 @@ extension BidirectionalCollection {
   ///
   /// - Complexity: O(*n*), where *n* is the length of this collection.
   ///
-  @inlinable
+  
   public func trimmingSuffix(
     while predicate: (Element) throws -> Bool
   ) rethrows -> SubSequence {
@@ -159,7 +159,7 @@ extension BidirectionalCollection where Self: RangeReplaceableCollection {
   ///
   /// - Complexity: O(*n*), where *n* is the length of this collection.
   ///
-  @inlinable
+  
   @_disfavoredOverload
   public mutating func trim(
     while predicate: (Element) throws -> Bool
@@ -183,7 +183,7 @@ extension BidirectionalCollection where Self: RangeReplaceableCollection {
   ///
   /// - Complexity: O(*n*), where *n* is the length of this collection.
   ///
-  @inlinable
+  
   @_disfavoredOverload
   public mutating func trimSuffix(
     while predicate: (Element) throws -> Bool
@@ -209,7 +209,7 @@ extension BidirectionalCollection where Self == Self.SubSequence {
   ///
   /// - Complexity: O(*n*), where *n* is the length of this collection.
   ///
-  @inlinable
+  
   public mutating func trim(
     while predicate: (Element) throws -> Bool
   ) rethrows {
@@ -231,7 +231,7 @@ extension BidirectionalCollection where Self == Self.SubSequence {
   ///
   /// - Complexity: O(*n*), where *n* is the length of this collection.
   ///
-  @inlinable
+  
   public mutating func trimSuffix(
     while predicate: (Element) throws -> Bool
   ) rethrows {
